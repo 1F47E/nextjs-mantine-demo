@@ -38,8 +38,8 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const icons = {
-    block: IconBox,
-    pool: IconRipple,
+  block: IconBox,
+  pool: IconRipple,
   user: IconUserPlus,
   discount: IconDiscount2,
   receipt: IconReceipt2,
@@ -67,15 +67,15 @@ function StatsGrid({ data }: StatsGridProps) {
 
         <Group align="flex-end" spacing="xs" mt={25}>
           <Text className={classes.value}>{stat.value}</Text>
-          <Text color={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} className={classes.diff}>
-            <span>{stat.diff}%</span>
-            <DiffIcon size="1rem" stroke={1.5} />
-          </Text>
+          {stat.diff > 0 && (
+            <Text color={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} className={classes.diff}>
+              <span>{stat.diff}%</span>
+              <DiffIcon size="1rem" stroke={1.5} />
+            </Text>
+          )}
         </Group>
 
-        <Text fz="xs" c="dimmed" mt={7}>
-          Compared to previous month
-        </Text>
+
       </Paper>
     );
   });

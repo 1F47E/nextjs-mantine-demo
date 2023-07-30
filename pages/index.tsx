@@ -21,11 +21,11 @@ const data: StatsGridProps = {
     {
       title: 'Block',
       icon: 'block',
-      value: '13,456',
-      diff: 34,
+      value: '800,348',
+      diff: 0,
     },
     {
-      title: 'Current fee',
+      title: 'Current avg fee',
       icon: 'coin',
       value: '4,145',
       diff: -13,
