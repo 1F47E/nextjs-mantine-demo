@@ -3,9 +3,18 @@ import { Welcome } from '../components/Welcome/Welcome';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import { StatsGrid, StatsGridProps } from '../components/Stats/Stats';
 import { TableTransactions } from '../components/Table/Table';
-// import { Lines } from '../components/Charts/Lines';
-const Lines = dynamic(() => import('../components/Charts/Lines'), { ssr: false });
-const Bars = dynamic(() => import('../components/Charts/Bars'), { ssr: false });
+
+// mantine
+import { Grid } from '@mantine/core';
+import { Flex, Button } from '@mantine/core';
+
+// import { Bars } from '../components/Charts/Bars2';
+// APEX
+// const Lines = dynamic(() => import('../components/Charts/Lines'), { ssr: false });
+// const Bars = dynamic(() => import('../components/Charts/Bars'), { ssr: false });
+// RECHARTS
+const Lines2 = dynamic(() => import('../components/Charts/Lines2'), { ssr: false });
+const Bars = dynamic(() => import('../components/Charts/Bars2'), { ssr: false });
 
 const data: StatsGridProps = {
   data: [
@@ -50,12 +59,26 @@ export default function HomePage() {
     <>
       <Welcome />
       <StatsGrid data={data.data} />
-      <TableTransactions data={elements} />
-      <Lines />
-      <div>
-Bars:
+
+
+      <Flex
+      direction={{ base: 'column', sm: 'row' }}
+      gap={{ base: 'sm', sm: 'lg' }}
+      justify={{ sm: 'center' }}
+    >
+      <Lines2 />
       <Bars />
-      </div>
+    </Flex>
+
+      <TableTransactions data={elements} />
+      apex:
+      {/* <Lines /> */}
+      recharts:
+      <Lines2 />
+      Bars:
+      <Bars />
+      ----
+      {/* <Bars /> */}
       <ColorSchemeToggle />
     </>
   );
