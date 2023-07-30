@@ -14,10 +14,10 @@ export function TableTransactions({ data }: { data: any[] }) {
     <Table>
       <thead>
         <tr>
-          <th>Element position</th>
-          <th>Element name</th>
-          <th>Symbol</th>
-          <th>Atomic mass</th>
+          <th>Tx id</th>
+          <th>Amount</th>
+          <th>Fee</th>
+          <th>Size</th>
         </tr>
       </thead>
       <tbody>{rows}</tbody>

@@ -5,8 +5,8 @@ import { StatsGrid, StatsGridProps } from '../components/Stats/Stats';
 import { TableTransactions } from '../components/Table/Table';
 
 // mantine
-import { Grid } from '@mantine/core';
-import { Flex, Button } from '@mantine/core';
+import { Space, Box, Group, Flex, Button, Title, Divider, Grid, Stack } from '@mantine/core';
+
 
 // import { Bars } from '../components/Charts/Bars2';
 // APEX
@@ -58,27 +58,46 @@ export default function HomePage() {
   return (
     <>
       <Welcome />
+
       <StatsGrid data={data.data} />
 
+      <Space h="xl" />
+      <Group position="center" grow>
+        <Stack>
+          <Title order={3} weight={400} align="center">Mempool size</Title>
+          <Lines2 />
+        </Stack>
+        <Stack>
+          <Title order={3} weight={400} align="center">Mempool fee</Title>
+          <Bars />
+        </Stack>
+      </Group>
 
-      <Flex
-      direction={{ base: 'column', sm: 'row' }}
-      gap={{ base: 'sm', sm: 'lg' }}
-      justify={{ sm: 'center' }}
-    >
-      <Lines2 />
-      <Bars />
-    </Flex>
+      <Space h="xl" />
 
-      <TableTransactions data={elements} />
-      apex:
-      {/* <Lines /> */}
-      recharts:
-      <Lines2 />
-      Bars:
-      <Bars />
-      ----
-      {/* <Bars /> */}
+      <Title order={3} weight={400} align="center">Mempool transactions</Title>
+      <Box
+        // component="a"
+        // href="https://mantine.dev"
+        // target="_blank"
+        sx={(theme) => ({
+          display: 'block',
+          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+          // color: theme.colorScheme === 'dark' ? theme.colors.blue[4] : theme.colors.blue[7],
+          textAlign: 'center',
+          padding: theme.spacing.xl,
+          margin: theme.spacing.xl,
+          borderRadius: theme.radius.md,
+
+
+        })}
+      >
+        <TableTransactions data={elements} />
+
+      </Box>
+
+
+      <Space h="xl" />
       <ColorSchemeToggle />
     </>
   );

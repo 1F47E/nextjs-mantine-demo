@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Chip } from '@mantine/core';
+import { Chip, Title, Divider } from '@mantine/core';
+
 const data = [
     {
         name: 'Page A',
@@ -70,32 +71,33 @@ const CustomTooltip = (data: TooltipProps<any, any>) => {
 export default function Lines() {
     return (
         <ResponsiveContainer width="100%" height={300}>
-        <LineChart
-        //   width={500}
-        //   height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-            {/* <CartesianGrid color="string" strokeDasharray="0 0 " /> */}
-            {/* <XAxis dataKey="name" /> */}
-            <YAxis type="number" />
-            {/* <Tooltip /> */}
-            <Tooltip content={CustomTooltip} />
-            {/* <Legend /> */}
-            <Line
-              type="natural"
-              dataKey="pv"
-              stroke="#ff9f43"
-              strokeWidth={3}
-            //   activeDot={{ r: 1 }}
-            />
-            {/* <Line dataKey="pv" stroke="#ff9f43" strokeWidth={3} /> */}
-        </LineChart>
+
+            <LineChart
+                //   width={500}
+                //   height={300}
+                data={data}
+                margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                }}
+            >
+                {/* <CartesianGrid color="string" strokeDasharray="0 0 " /> */}
+                {/* <XAxis dataKey="name" /> */}
+                <YAxis type="number" />
+                {/* <Tooltip /> */}
+                <Tooltip content={CustomTooltip} />
+                {/* <Legend /> */}
+                <Line
+                    type="natural"
+                    dataKey="pv"
+                    stroke="#ff9f43"
+                    strokeWidth={3}
+                //   activeDot={{ r: 1 }}
+                />
+                {/* <Line dataKey="pv" stroke="#ff9f43" strokeWidth={3} /> */}
+            </LineChart>
         </ResponsiveContainer>
     );
 }

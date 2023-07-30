@@ -6,7 +6,7 @@ export function Welcome() {
 
   return (
     <>
-      <Title className={classes.title} align="center" mt={100}>
+      <Title weight={100} className={classes.title} align="left" mt={10}>
         <Text inherit variant="gradient" component="span">
           feesh
         </Text>
