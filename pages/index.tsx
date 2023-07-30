@@ -1,7 +1,10 @@
+import dynamic from 'next/dynamic';
 import { Welcome } from '../components/Welcome/Welcome';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import { StatsGrid, StatsGridProps } from '../components/Stats/Stats';
 import { TableTransactions } from '../components/Table/Table';
+// import { Lines } from '../components/Charts/Lines';
+const Lines = dynamic(() => import('../components/Charts/Lines'), { ssr: false });
 
 const data: StatsGridProps = {
   data: [
@@ -47,6 +50,7 @@ export default function HomePage() {
       <Welcome />
       <StatsGrid data={data.data} />
       <TableTransactions data={elements} />
+      <Lines />
       <ColorSchemeToggle />
     </>
   );
