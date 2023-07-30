@@ -5,6 +5,7 @@ import { StatsGrid, StatsGridProps } from '../components/Stats/Stats';
 import { TableTransactions } from '../components/Table/Table';
 // import { Lines } from '../components/Charts/Lines';
 const Lines = dynamic(() => import('../components/Charts/Lines'), { ssr: false });
+const Bars = dynamic(() => import('../components/Charts/Bars'), { ssr: false });
 
 const data: StatsGridProps = {
   data: [
@@ -51,6 +52,10 @@ export default function HomePage() {
       <StatsGrid data={data.data} />
       <TableTransactions data={elements} />
       <Lines />
+      <div>
+Bars:
+      <Bars />
+      </div>
       <ColorSchemeToggle />
     </>
   );
