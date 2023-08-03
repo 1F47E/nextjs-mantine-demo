@@ -1,13 +1,8 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-// import {
-//   Pool,
-// } from '../types/pool';
-
-// STORAGE
-//
 
 /*
+api data
     "height": 2470599,
     "size": 21,
     "amount": 97563011781,
@@ -35,7 +30,7 @@ export const usePoolStore = create<PoolState>()(
         updatePool: (p:null | Pool) => set(() => ({ pool: p })),
       }),
       {
-        name: 'rates-storage',
+        name: 'pool-storage',
       }
     )
   )

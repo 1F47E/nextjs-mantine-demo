@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import dynamic from 'next/dynamic';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Space, Box, Group, Flex, Button, Title, Divider, Grid, Stack } from '@mantine/core';
 import { Welcome } from '../components/Welcome/Welcome';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
@@ -11,7 +12,9 @@ import { fetchData } from '../api/client';
 const Lines2 = dynamic(() => import('../components/Charts/Lines2'), { ssr: false });
 const Bars = dynamic(() => import('../components/Charts/Bars2'), { ssr: false });
 
-
+// ws
+const HOST_WS_URL = 'ws://localhost:8080/v0/ws';
+const RECONNECT_TIME = 5000; // Time to wait before attempting to reconnect (in milliseconds)
 
 // table data
 const elements = [
@@ -23,8 +26,8 @@ const elements = [
 ];
 
 export default function HomePage() {
-// const [stats, setStatus] = useState();
-  // setHeight(123);
+  const socketRef = useRef<WebSocket | null>(null);
+
   const [stats, setStats] = useState<StatsGridProps>({
     data: [
       {
@@ -54,6 +57,73 @@ export default function HomePage() {
     ],
   });
 
+  // ===== WEBSOCKETS
+  const connect = () => {
+    const websocket = new WebSocket(HOST_WS_URL);
+
+    websocket.onopen = () => {
+      console.log('connected');
+      websocket.send('hello'); // send "hello" upon connection
+    };
+
+    websocket.onmessage = (event) => {
+      console.log(event.data);
+      // parse the incoming data
+      const incomingData = JSON.parse(event.data);
+      setStats({
+        data: [
+          {
+            title: 'Block',
+            icon: 'block',
+            value: incomingData.pool_size.toString(),
+            diff: 0, // set this based on your logic
+          },
+          {
+            title: 'Current avg fee',
+            icon: 'coin',
+            value: incomingData.avg_fee.toString(),
+            diff: 0, // set this based on your logic
+          },
+          {
+            title: 'AVG tx fee',
+            icon: 'discount',
+            value: incomingData.total_fee.toString(),
+            diff: 0, // set this based on your logic
+          },
+          {
+            title: 'Mempool size',
+            icon: 'pool',
+            value: incomingData.total_amount.toString(),
+            diff: 0, // set this based on your logic
+          },
+        ],
+      });
+    };
+    websocket.onerror = (error) => console.log('WebSocket error: ', error);
+
+    websocket.onclose = (event) => {
+      console.log('WebSocket connection closed: ', event);
+      console.log('Reconnecting...');
+      setTimeout(connect, RECONNECT_TIME);
+    };
+
+    // Store the websocket instance in useRef
+    socketRef.current = websocket;
+  };
+
+  useEffect(() => {
+    // Connection
+    connect();
+
+    // Cleanup
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
+  }, []);
+
+  // ===== API request on start
   useEffect(() => {
     const getData = async () => {
       try {
@@ -96,10 +166,10 @@ export default function HomePage() {
           } as StatsGridProps;
           setStats(updatedStats);
 
-
           return pool;
         });
-        // Handle your data here
+
+        // debug incoming data
         console.log(apidata);
       } catch (error) {
         console.error('Failed to fetch data', error);
