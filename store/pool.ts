@@ -15,6 +15,7 @@ interface Pool {
   amount: number,
   weight: number,
   fee: number,
+  avg_fee: number,
 }
 
 export interface PoolState {
@@ -26,7 +27,14 @@ export const usePoolStore = create<PoolState>()(
   devtools(
     persist(
       (set) => ({
-        pool: null,
+        pool: {
+          height: 0,
+          size: 0,
+          amount: 0,
+          weight: 0,
+          fee: 0,
+          avg_fee: 0,
+        },
         updatePool: (p:null | Pool) => set(() => ({ pool: p })),
       }),
       {

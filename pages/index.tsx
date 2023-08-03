@@ -4,9 +4,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Space, Box, Group, Flex, Button, Title, Divider, Grid, Stack } from '@mantine/core';
 import { Welcome } from '../components/Welcome/Welcome';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
-import { StatsGrid, StatsGridProps } from '../components/Stats/Stats';
+// import { StatsGrid, StatsGridProps } from '../components/Stats/Stats';
 import { TableTransactions } from '../components/Table/Table';
 import { fetchData } from '../api/client';
+import { usePoolStore } from '../store/pool';
+
+const StatsGridNoSSR = dynamic(
+  () => import('../components/Stats/Stats').then((module) => module.StatsGrid),
+  { ssr: false }
+);
 
 // RECHARTS
 const Lines2 = dynamic(() => import('../components/Charts/Lines2'), { ssr: false });
@@ -27,38 +33,10 @@ const elements = [
 
 export default function HomePage() {
   const socketRef = useRef<WebSocket | null>(null);
-
-  const [stats, setStats] = useState<StatsGridProps>({
-    data: [
-      {
-        title: 'Block',
-        icon: 'block',
-        value: '-',
-        diff: 0,
-      },
-      {
-        title: 'Current avg fee',
-        icon: 'coin',
-        value: '-',
-        diff: 0,
-      },
-      {
-        title: 'AVG tx fee',
-        icon: 'discount',
-        value: '-',
-        diff: 0,
-      },
-      {
-        title: 'Mempool size',
-        icon: 'pool',
-        value: '-',
-        diff: 0,
-      },
-    ],
-  });
+  const { updatePool } = usePoolStore();
 
   // ===== WEBSOCKETS
-  const connect = () => {
+  const WSconnect = () => {
     const websocket = new WebSocket(HOST_WS_URL);
 
     websocket.onopen = () => {
@@ -70,41 +48,14 @@ export default function HomePage() {
       console.log(event.data);
       // parse the incoming data
       const incomingData = JSON.parse(event.data);
-      setStats({
-        data: [
-          {
-            title: 'Block',
-            icon: 'block',
-            value: incomingData.pool_size.toString(),
-            diff: 0, // set this based on your logic
-          },
-          {
-            title: 'Current avg fee',
-            icon: 'coin',
-            value: incomingData.avg_fee.toString(),
-            diff: 0, // set this based on your logic
-          },
-          {
-            title: 'AVG tx fee',
-            icon: 'discount',
-            value: incomingData.total_fee.toString(),
-            diff: 0, // set this based on your logic
-          },
-          {
-            title: 'Mempool size',
-            icon: 'pool',
-            value: incomingData.total_amount.toString(),
-            diff: 0, // set this based on your logic
-          },
-        ],
-      });
+      updatePool(incomingData); 
     };
     websocket.onerror = (error) => console.log('WebSocket error: ', error);
 
     websocket.onclose = (event) => {
       console.log('WebSocket connection closed: ', event);
       console.log('Reconnecting...');
-      setTimeout(connect, RECONNECT_TIME);
+      setTimeout(WSconnect, RECONNECT_TIME);
     };
 
     // Store the websocket instance in useRef
@@ -112,8 +63,8 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    // Connection
-    connect();
+    // wsConnection
+    WSconnect();
 
     // Cleanup
     return () => {
@@ -131,41 +82,7 @@ export default function HomePage() {
         const apidata = await fetchData('pool').then((d) => {
           const pool = d.data;
           console.log('api data', pool);
-          // if (pool.height) {
-          //   // setHeight(d.height);
-          //   console.log('height', pool.height);
-          // }
-          const avgFee = Math.floor(pool.fee / pool.weight);
-          const updatedStats = {
-            data: [
-              {
-                title: 'Block',
-                icon: 'block',
-                value: pool.height.toString(),
-                diff: 0, // provide diff value
-              },
-              {
-                title: 'Current avg fee',
-                icon: 'coin',
-                value: avgFee.toString(),
-                diff: -13, // provide diff value
-              },
-              {
-                title: 'Mempool size',
-                icon: 'pool',
-                value: pool.size.toString(),
-                diff: -30, // provide diff value
-              },
-              {
-                title: 'Mempool weight',
-                icon: 'discount',
-                value: pool.weight.toString(),
-                diff: 18, // provide diff value
-              },
-            ],
-          } as StatsGridProps;
-          setStats(updatedStats);
-
+          updatePool(pool);
           return pool;
         });
 
@@ -182,7 +99,7 @@ export default function HomePage() {
     <>
       <Welcome />
 
-      <StatsGrid data={stats.data} />
+      <StatsGridNoSSR />
 
       <Space h="xl" />
       <Group position="center" grow>
@@ -200,13 +117,10 @@ export default function HomePage() {
 
       <Title order={3} weight={400} align="center">Mempool transactions</Title>
       <Box
-        // component="a"
-        // href="https://mantine.dev"
         // target="_blank"
         sx={(theme) => ({
           display: 'block',
           backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-          // color: theme.colorScheme === 'dark' ? theme.colors.blue[4] : theme.colors.blue[7],
           textAlign: 'center',
           padding: theme.spacing.xl,
           margin: theme.spacing.xl,

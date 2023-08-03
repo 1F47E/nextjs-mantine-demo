@@ -9,6 +9,7 @@ import {
   IconBox,
   IconRipple,
 } from '@tabler/icons-react';
+import { usePoolStore } from '../../store/pool';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -50,10 +51,25 @@ interface StatsGridProps {
   data: { title: string; icon: keyof typeof icons; value: string; diff: number }[];
 }
 
-function StatsGrid({ data }: StatsGridProps) {
+function StatsGrid() {
+  const { pool } = usePoolStore(); // Extract pool from the store
+
+  // Extract values from pool
+  const blockValue = pool?.height?.toString() ?? '-';
+  const feeValue = pool?.fee?.toString() ?? '-';
+  const mempoolSizeValue = pool?.size?.toString() ?? '-';
+  const mempoolWeightValue = pool?.weight?.toString() ?? '-';
+
   const { classes } = useStyles();
-  const stats = data.map((stat) => {
-    const Icon = icons[stat.icon];
+  const stats = [
+    { title: 'Block', icon: 'block', value: blockValue, diff: 0 },
+    { title: 'Current avg fee', icon: 'coin', value: feeValue, diff: 0 },
+    { title: 'Mempool size', icon: 'pool', value: mempoolSizeValue, diff: 0 },
+    { title: 'Mempool weight', icon: 'discount', value: mempoolWeightValue, diff: 0 },
+  ];
+
+  const statsItems = stats.map((stat) => {
+    // const Icon = icons[stat.icon];
     const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
 
     return (
@@ -62,7 +78,7 @@ function StatsGrid({ data }: StatsGridProps) {
           <Text size="xs" color="dimmed" className={classes.title}>
             {stat.title}
           </Text>
-          <Icon className={classes.icon} size="1.4rem" stroke={1.5} />
+          {/* <Icon className={classes.icon} size="1.4rem" stroke={1.5} /> */}
         </Group>
 
         <Group align="flex-end" spacing="xs" mt={25}>
@@ -86,7 +102,7 @@ function StatsGrid({ data }: StatsGridProps) {
           { maxWidth: 'xs', cols: 1 },
         ]}
       >
-        {stats}
+        {statsItems}
       </SimpleGrid>
     </div>
   );
