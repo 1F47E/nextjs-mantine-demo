@@ -123,7 +123,7 @@ const data = [
 
 // TODO: move to component
 const CustomTooltip = (data: TooltipProps<any, any>) => {
-    const { active, payload } = data
+    const { active, payload } = data;
 
     if (active && payload) {
         return (
@@ -133,38 +133,36 @@ const CustomTooltip = (data: TooltipProps<any, any>) => {
                     data.payload.map((i: any) => {
                         return (
                             // <Chip >{`${i.dataKey} : ${i.payload[i.dataKey]}`}</Chip>
-                            <Chip >{i.payload[i.dataKey]}</Chip>
+                            <Chip key={i.dataKey}>{i.payload[i.dataKey]}</Chip>
                         )
                     })}
             </div>
-        )
+        );
     };
 
-    return null
+    return null;
 };
-
 
 export default function Bars() {
     return (
         <ResponsiveContainer width="100%" height={300}>
-                               
-        <BarChart
-            // width={420}
-            // height={250}
-            data={data}
-            barGap={0}
-            barSize={20}
-        //   layout="vertical"
-        >
-            {/* <YAxis /> */}
-            <XAxis />
-            {/* <Tooltip /> */}
-            <Tooltip content={CustomTooltip} />
-            {/* <Legend /> */}
-            {/* <Bar dataKey="Apple" fill="#8884d8" />
+            <BarChart
+                // width={420}
+                // height={250}
+                data={data}
+                barGap={0}
+                barSize={20}
+            //   layout="vertical"
+            >
+                {/* <YAxis /> */}
+                <XAxis />
+                {/* <Tooltip /> */}
+                <Tooltip content={CustomTooltip} />
+                {/* <Legend /> */}
+                {/* <Bar dataKey="Apple" fill="#8884d8" />
             <Bar dataKey="uv" fill="#82ca9d" /> */}
-            <Bar dataKey="Apple" stackId="a" fill="#826af9" />
-        </BarChart>
+                <Bar dataKey="Apple" stackId="a" fill="#826af9" />
+            </BarChart>
         </ResponsiveContainer>
     );
 }

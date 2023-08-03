@@ -74,8 +74,6 @@ function StatsGrid({ data }: StatsGridProps) {
             </Text>
           )}
         </Group>
-
-
       </Paper>
     );
   });

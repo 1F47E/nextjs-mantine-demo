@@ -47,22 +47,21 @@ const data = [
     },
 ];
 
-const CustomTooltip = (data: TooltipProps<any, any>) => {
-    const { active, payload } = data
+const CustomTooltip = (props: TooltipProps<any, any>) => {
+    const { active, payload } = props;
 
     if (active && payload) {
         return (
-            <div className='recharts-custom-tooltip'>
+            <div className="recharts-custom-tooltip">
                 {data &&
                     data.payload &&
                     data.payload.map((i: any) => {
                         return (
-                            // <Chip >{`${i.dataKey} : ${i.payload[i.dataKey]}`}</Chip>
-                            <Chip >{i.payload[i.dataKey]}</Chip>
-                        )
-                    })}
+                            <Chip key={i}>{i.payload[i.dataKey]}</Chip>
+                        );
+                    })};
             </div>
-        )
+        );
     };
 
     return null
