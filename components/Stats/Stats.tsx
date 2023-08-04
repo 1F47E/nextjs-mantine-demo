@@ -1,5 +1,7 @@
 import dynamic from 'next/dynamic';
 import { createStyles, Group, Paper, SimpleGrid, Text, rem } from '@mantine/core';
+import AnimatedNumber from "animated-number-react";
+
 import {
   IconDiscount2,
   IconCoin,
@@ -63,7 +65,7 @@ function StatsGrid() {
   const mempoolWeightValue = pool?.weight ?? 0;
 
   const { classes } = useStyles();
-  const stats:StatsGridProps[] = [
+  const stats: StatsGridProps[] = [
     { title: 'Block', icon: 'block', value: blockValue },
     { title: 'Current avg fee', icon: 'coin', value: feeValue },
     { title: 'Mempool size', icon: 'pool', value: mempoolSizeValue },
@@ -73,8 +75,7 @@ function StatsGrid() {
   const statsItems = stats.map((stat) => {
     const iconName = stat.icon as keyof typeof icons;
     const Icon = icons[iconName];
-    // const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
-
+    const formatValue = (value:number) => value.toFixed(0);
     return (
       <Paper withBorder p="md" radius="md" key={stat.title}>
 
@@ -87,7 +88,12 @@ function StatsGrid() {
         </Group>
 
         <Group align="flex-end" spacing="xs" mt={25}>
-          <AnimatedNumbers
+          <Text className={classes.value}>
+          <AnimatedNumber
+            value={stat.value}
+            formatValue={formatValue}
+          /></Text>
+          {/* <AnimatedNumbers
             includeComma
             animateToNumber={stat.value}
             fontStyle={{ fontSize: 30 }}
@@ -95,7 +101,7 @@ function StatsGrid() {
             configs={(number, index) => (
               { mass: 1, tension: 230 * (index + 1), friction: 140 })
             }
-          />
+          /> */}
         </Group>
       </Paper>
     );
