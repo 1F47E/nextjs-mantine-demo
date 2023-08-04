@@ -48,7 +48,7 @@ export default function HomePage() {
       console.log(event.data);
       // parse the incoming data
       const incomingData = JSON.parse(event.data);
-      updatePool(incomingData); 
+      updatePool(incomingData);
     };
     websocket.onerror = (error) => console.log('WebSocket error: ', error);
 
@@ -102,6 +102,7 @@ export default function HomePage() {
       <StatsGridNoSSR />
 
       <Space h="xl" />
+
       <Group position="center" grow>
         <Stack>
           <Title order={3} weight={400} align="center">Mempool size</Title>
@@ -117,7 +118,6 @@ export default function HomePage() {
 
       <Title order={3} weight={400} align="center">Mempool transactions</Title>
       <Box
-        // target="_blank"
         sx={(theme) => ({
           display: 'block',
           backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],

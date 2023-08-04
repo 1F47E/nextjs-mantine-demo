@@ -1,15 +1,16 @@
+import dynamic from 'next/dynamic';
 import { createStyles, Group, Paper, SimpleGrid, Text, rem } from '@mantine/core';
 import {
-  IconUserPlus,
   IconDiscount2,
-  IconReceipt2,
   IconCoin,
-  IconArrowUpRight,
-  IconArrowDownRight,
   IconBox,
   IconRipple,
 } from '@tabler/icons-react';
 import { usePoolStore } from '../../store/pool';
+
+const AnimatedNumbers = dynamic(() => import('react-animated-numbers'), {
+  ssr: false,
+});
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -41,54 +42,60 @@ const useStyles = createStyles((theme) => ({
 const icons = {
   block: IconBox,
   pool: IconRipple,
-  user: IconUserPlus,
   discount: IconDiscount2,
-  receipt: IconReceipt2,
   coin: IconCoin,
 };
 
 interface StatsGridProps {
-  data: { title: string; icon: keyof typeof icons; value: string; diff: number }[];
+  title: string;
+  icon: string;
+  value: number;
 }
 
 function StatsGrid() {
   const { pool } = usePoolStore(); // Extract pool from the store
 
+
   // Extract values from pool
-  const blockValue = pool?.height?.toString() ?? '-';
-  const feeValue = pool?.fee?.toString() ?? '-';
-  const mempoolSizeValue = pool?.size?.toString() ?? '-';
-  const mempoolWeightValue = pool?.weight?.toString() ?? '-';
+  const blockValue = pool?.height ?? 0;
+  const feeValue = pool?.fee ?? 0;
+  const mempoolSizeValue = pool?.size ?? 0;
+  const mempoolWeightValue = pool?.weight ?? 0;
 
   const { classes } = useStyles();
-  const stats = [
-    { title: 'Block', icon: 'block', value: blockValue, diff: 0 },
-    { title: 'Current avg fee', icon: 'coin', value: feeValue, diff: 0 },
-    { title: 'Mempool size', icon: 'pool', value: mempoolSizeValue, diff: 0 },
-    { title: 'Mempool weight', icon: 'discount', value: mempoolWeightValue, diff: 0 },
+  const stats:StatsGridProps[] = [
+    { title: 'Block', icon: 'block', value: blockValue },
+    { title: 'Current avg fee', icon: 'coin', value: feeValue },
+    { title: 'Mempool size', icon: 'pool', value: mempoolSizeValue },
+    { title: 'Mempool weight', icon: 'discount', value: mempoolWeightValue },
   ];
 
   const statsItems = stats.map((stat) => {
-    // const Icon = icons[stat.icon];
-    const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
+    const iconName = stat.icon as keyof typeof icons;
+    const Icon = icons[iconName];
+    // const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
 
     return (
       <Paper withBorder p="md" radius="md" key={stat.title}>
+
         <Group position="apart">
           <Text size="xs" color="dimmed" className={classes.title}>
             {stat.title}
           </Text>
-          {/* <Icon className={classes.icon} size="1.4rem" stroke={1.5} /> */}
+          <Icon className={classes.icon} size="1.4rem" stroke={1.5} />
+
         </Group>
 
         <Group align="flex-end" spacing="xs" mt={25}>
-          <Text className={classes.value}>{stat.value}</Text>
-          {stat.diff > 0 && (
-            <Text color={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} className={classes.diff}>
-              <span>{stat.diff}%</span>
-              <DiffIcon size="1rem" stroke={1.5} />
-            </Text>
-          )}
+          <AnimatedNumbers
+            includeComma
+            animateToNumber={stat.value}
+            fontStyle={{ fontSize: 30 }}
+            locale="en-US"
+            configs={(number, index) => (
+              { mass: 1, tension: 230 * (index + 1), friction: 140 })
+            }
+          />
         </Group>
       </Paper>
     );
