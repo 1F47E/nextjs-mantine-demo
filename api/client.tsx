@@ -4,13 +4,9 @@
 
 // get the url of the websocket server from vercel envs
 // NEXT_PUPLIC prefix is required for vercel to expose the env
-let API_HOST = process.env.NEXT_PUBLIC_API_HOST as string;
+export const API_HOST = process.env.NEXT_PUBLIC_API_HOST as string;
+export const API_WS_HOST = process.env.NEXT_PUBLIC_API_WS_HOST as string;
 
-// const HOST_URL = process.env.NEXT_PUBLIC_SERVER_HOST;
-if (!API_HOST) {
-    console.error('NEXT_PUBLIC_SERVER_HOST is not defined, localhost mode');
-    API_HOST = 'http://localhost:8080/';
-}
 
 const TIMEOUT = 5 * 1000;
 

@@ -6,7 +6,7 @@ import { Welcome } from '../components/Welcome/Welcome';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 // import { StatsGrid, StatsGridProps } from '../components/Stats/Stats';
 import { TableTransactions } from '../components/Table/Table';
-import { fetchData } from '../api/client';
+import { fetchData, API_WS_HOST } from '../api/client';
 import { usePoolStore } from '../store/pool';
 
 const StatsGridNoSSR = dynamic(
@@ -19,7 +19,7 @@ const Lines2 = dynamic(() => import('../components/Charts/Lines2'), { ssr: false
 const Bars = dynamic(() => import('../components/Charts/Bars2'), { ssr: false });
 
 // ws
-const HOST_WS_URL = 'ws://localhost:8080/v0/ws';
+const WS_URL = `${API_WS_HOST}/v0/ws`;
 const RECONNECT_TIME = 5000; // Time to wait before attempting to reconnect (in milliseconds)
 
 // table data
@@ -34,7 +34,7 @@ export default function HomePage() {
 
   // ===== WEBSOCKETS
   const WSconnect = () => {
-    const websocket = new WebSocket(HOST_WS_URL);
+    const websocket = new WebSocket(WS_URL);
 
     websocket.onopen = () => {
       console.log('connected');
