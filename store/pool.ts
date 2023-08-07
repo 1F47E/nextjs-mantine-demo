@@ -16,13 +16,10 @@ interface Pool {
   weight: number,
   fee: number,
   avg_fee: number,
-  fee_buckets: Bucket[],
+  fee_buckets: number[],
 }
 
-interface Bucket {
-  name: string,
-  value: number,
-}
+
 
 export interface FeeBucketState {
   pool: null | Pool,

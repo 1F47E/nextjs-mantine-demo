@@ -10,55 +10,15 @@ import { IconInfoSquareRounded } from '@tabler/icons-react';
 
 import { usePoolStore } from '../../store/pool';
 
-const dataDemo = [
-    {
-        name: '7/12',
-        value: 80,
-    },
-    {
-        name: '8/12',
-        value: 100,
-    },
-    {
-        name: '9/12',
-        value: 80,
-    },
-    {
-        name: '10/12',
-        value: 100,
-
-    },
-    {
-        name: '11/12',
-        value: 50,
-
-    },
-    {
-        name: '12/12',
-        value: 55,
-
-    },
-    {
-        name: '13/12',
-        value: 70,
-    },
-    {
-        name: '14/12',
-        value: 100,
-
-    },
-    {
-        name: '15/12',
-        value: 80,
-
-    },
-    {
-        name: '16/12',
-        value: 30,
-
-    },
+// buckets := []uint{2, 3, 4, 5, 6, 8, 10, 15, 25, 35, 50, 70, 85, 100, 125, 150, 200, 250, 300, 350, 400, 450, 499}
+let buckets = [
+    2, 3, 4, 5, 6, 8, 10, 15, 25, 35, 50, 70, 85, 100, 
+    125, 150, 200, 250, 300, 350, 400, 450, 499, 500,
 ];
-
+let feeData = buckets.map(bucket => ({
+    name: bucket.toString(), // convert bucket value to string for the 'name' property
+    value: 0,
+}));
 
 // TODO: move to component
 const CustomTooltip = (data: TooltipProps<any, any>) => {
@@ -87,13 +47,24 @@ export default function Bars() {
     console.log('bars pool storage data:', pool);
     let data = pool?.fee_buckets;
  
+    // remap data
+    if (data) {
+        if (feeData.length === data.length) {
+            for (let i = 0; i < data.length; i++) {
+                feeData[i].value = data[i];
+                // console.log("data", data[i]);
+            }
+        } else {
+            console.error('Lengths of feeData and apiData are not the same');
+        }
+    }
 
     return (
         <ResponsiveContainer width="100%" height={300}>
             <BarChart
                 // width={420}
                 // height={250}
-                data={data}
+                data={feeData}
                 barGap={0}
                 barSize={20}
             //   layout="vertical"

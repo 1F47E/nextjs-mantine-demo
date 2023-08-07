@@ -109,7 +109,7 @@ export default function HomePage() {
           <Lines2 />
         </Stack>
         <Stack>
-          <Title order={3} weight={400} align="center">Mempool fee</Title>
+          <Title order={3} weight={400} align="center">Mempool fee distribution sat/byte</Title>
           <Bars />
         </Stack>
       </Group>
