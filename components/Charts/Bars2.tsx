@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
 // import { BarChart, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Tooltip, ResponsiveContainer, TooltipProps } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, Tooltip, TooltipProps } from 'recharts';
 
-import { Box, Title } from '@mantine/core';
-import { Chip } from '@mantine/core';
+import { Box, Title, Chip } from '@mantine/core';
 
 // icons
 import { IconInfoSquareRounded } from '@tabler/icons-react';
@@ -12,14 +11,20 @@ import { usePoolStore } from '../../store/pool';
 
 // buckets := []uint{2, 3, 4, 5, 6, 8, 10, 15, 25, 35, 50, 70, 85, 100, 125, 150, 200, 250, 300, 350, 400, 450, 499}
 let buckets = [
-    2, 3, 4, 5, 6, 8, 10, 15, 25, 35, 50, 70, 85, 100, 
+    2, 3, 4, 5, 6, 8, 10, 15, 25, 35, 50, 70, 85, 100,
     125, 150, 200, 250, 300, 350, 400, 450, 499, 500,
 ];
-let feeData = buckets.map(bucket => ({
-    name: bucket.toString(), // convert bucket value to string for the 'name' property
-    value: 0,
-}));
 
+const feeData = buckets.map(bucket => {
+    let name = bucket.toString();
+    if (bucket === 500) {
+        name = '500+';
+    }
+    return {
+        name, // use the 'name' variable
+        value: 0,
+    };
+});
 // TODO: move to component
 const CustomTooltip = (data: TooltipProps<any, any>) => {
     const { active, payload } = data;
@@ -32,7 +37,9 @@ const CustomTooltip = (data: TooltipProps<any, any>) => {
                     data.payload &&
                     data.payload.map((i: any) => {
                         return (
-                            <Chip key={i.dataKey}>{i.value}</Chip>
+                            <Chip key={i.dataKey}>
+                                {i.payload.name}+ sat/byte - {i.value} txs
+                            </Chip>
                         )
                     })}
             </div>
@@ -56,6 +63,10 @@ export default function Bars() {
             }
         } else {
             console.error('Lengths of feeData and apiData are not the same');
+            console.log('feeData length:', feeData.length);
+            console.log('apiData length:', data.length);
+            console.log('feeData:', feeData);
+            console.log('apiData:', data);
         }
     }
 

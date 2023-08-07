@@ -1,56 +1,31 @@
 import React, { PureComponent } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, TooltipProps, Legend, ResponsiveContainer } from 'recharts';
 import { Chip, Title, Divider } from '@mantine/core';
 
-const data = [
-    {
-        name: 'Page A',
-        uv: 4000,
-        pv: 2400,
-        amt: 2400,
-    },
-    {
-        name: 'Page B',
-        uv: 3000,
-        pv: 1398,
-        amt: 2210,
-    },
-    {
-        name: 'Page C',
-        uv: 2000,
-        pv: 9800,
-        amt: 2290,
-    },
-    {
-        name: 'Page D',
-        uv: 2780,
-        pv: 3908,
-        amt: 2000,
-    },
-    {
-        name: 'Page E',
-        uv: 1890,
-        pv: 4800,
-        amt: 2181,
-    },
-    {
-        name: 'Page F',
-        uv: 2390,
-        pv: 3800,
-        amt: 2500,
-    },
-    {
-        name: 'Page G',
-        uv: 3490,
-        pv: 4300,
-        amt: 2100,
-    },
-];
+import { usePoolStore } from '../../store/pool';
 
-const CustomTooltip = (props: TooltipProps<any, any>) => {
-    const { active, payload } = props;
+// demo chart data
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
+  const data = Array.from({ length: 20 }, (_, i) => {
+    const date = new Date();
+    date.setHours(date.getHours() - i);  
+    return {
+      name: date.toLocaleString(),
+      value: getRandomInt(1000, 5000),  
+    };
+  }).reverse(); // reverse the array so it's sorted in ascending order by time
+
+  
+
+
+const CustomTooltip = (data: TooltipProps<any, any>) => {
+    const { active, payload } = data;
 
     if (active && payload) {
+        console.log('custom tooltip data:', data);
         return (
             <div className="recharts-custom-tooltip">
                 {data &&
@@ -58,8 +33,8 @@ const CustomTooltip = (props: TooltipProps<any, any>) => {
                     data.payload.map((i: any) => {
                         return (
                             <Chip key={i}>{i.payload[i.dataKey]}</Chip>
-                        );
-                    })};
+                        )
+                    })}
             </div>
         );
     };
@@ -68,13 +43,27 @@ const CustomTooltip = (props: TooltipProps<any, any>) => {
 };
 
 export default function Lines() {
+    const { pool } = usePoolStore(); // Extract pool from the store
+    console.log('bars pool storage data:', pool);
+    let dataApi = pool?.size_history;
+    console.log('Lines size_history:', dataApi);
+
+    // remap data
+const feeSizeData = dataApi.map(size => {
+    let name = size.toString();
+    return {
+        name, // use the 'name' variable
+        value: size,
+    };
+});
+
     return (
         <ResponsiveContainer width="100%" height={300}>
 
             <LineChart
                 //   width={500}
                 //   height={300}
-                data={data}
+                data={feeSizeData}
                 margin={{
                     top: 5,
                     right: 30,
@@ -90,7 +79,7 @@ export default function Lines() {
                 {/* <Legend /> */}
                 <Line
                     type="natural"
-                    dataKey="pv"
+                    dataKey="value"
                     stroke="#ff9f43"
                     strokeWidth={3}
                 //   activeDot={{ r: 1 }}

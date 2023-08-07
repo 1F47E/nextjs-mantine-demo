@@ -12,6 +12,7 @@ api data
 interface Pool {
   height: number,
   size: number,
+  size_history: number[],
   amount: number,
   weight: number,
   fee: number,
@@ -38,6 +39,7 @@ export const usePoolStore = create<StorageState>()(
         pool: {
           height: 0,
           size: 0,
+          size_history: [],
           amount: 0,
           weight: 0,
           fee: 0,

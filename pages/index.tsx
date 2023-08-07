@@ -26,9 +26,6 @@ const RECONNECT_TIME = 5000; // Time to wait before attempting to reconnect (in 
 const elements = [
   { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
   { position: 7, mass: 14.007, symbol: 'N', name: 'Nitrogen' },
-  { position: 39, mass: 88.906, symbol: 'Y', name: 'Yttrium' },
-  { position: 56, mass: 137.33, symbol: 'Ba', name: 'Barium' },
-  { position: 58, mass: 140.12, symbol: 'Ce', name: 'Cerium' },
 ];
 
 export default function HomePage() {
@@ -97,7 +94,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Welcome />
+      {/* <Welcome /> */}
 
       <StatsGridNoSSR />
 
@@ -116,7 +113,7 @@ export default function HomePage() {
 
       <Space h="xl" />
 
-      <Title order={3} weight={400} align="center">Mempool transactions</Title>
+      {/* <Title order={3} weight={400} align="center">Mempool transactions</Title> */}
       <Box
         sx={(theme) => ({
           display: 'block',
@@ -127,7 +124,7 @@ export default function HomePage() {
           borderRadius: theme.radius.md,
         })}
       >
-        <TableTransactions data={elements} />
+        {/* <TableTransactions data={elements} /> */}
 
       </Box>
       <Space h="xl" />
