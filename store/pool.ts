@@ -1,14 +1,6 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-/*
-api data
-    "height": 2470599,
-    "size": 21,
-    "amount": 97563011781,
-    "weight": 22949,
-    "fee": 40165,
-*/
 interface Pool {
   height: number,
   size: number,
@@ -19,8 +11,6 @@ interface Pool {
   avg_fee: number,
   fee_buckets: number[],
 }
-
-
 
 export interface FeeBucketState {
   pool: null | Pool,

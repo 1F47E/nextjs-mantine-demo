@@ -2,8 +2,15 @@
 // import wretch from 'wretch';
 // import { usePoolStore } from '../store/pool';
 
+// get the url of the websocket server from vercel envs
+// NEXT_PUPLIC prefix is required for vercel to expose the env
+let API_HOST = process.env.NEXT_PUBLIC_API_HOST as string;
+
 // const HOST_URL = process.env.NEXT_PUBLIC_SERVER_HOST;
-const HOST_URL = 'http://localhost:8080/v0/';
+if (!API_HOST) {
+    console.error('NEXT_PUBLIC_SERVER_HOST is not defined, localhost mode');
+    API_HOST = 'http://localhost:8080/';
+}
 
 const TIMEOUT = 5 * 1000;
 
@@ -29,9 +36,9 @@ export const fetchData = async (url: string): Promise<any> => {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), TIMEOUT);
 
-    const apiUrl = `${HOST_URL}${url}`;
+    const apiUrl = `${API_HOST}/v0/${url}`;
     console.log('fetching', apiUrl);
-    const response = await fetch(`${HOST_URL}${url}`, {
+    const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

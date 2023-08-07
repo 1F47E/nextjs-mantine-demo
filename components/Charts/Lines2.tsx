@@ -5,20 +5,20 @@ import { Chip, Title, Divider } from '@mantine/core';
 import { usePoolStore } from '../../store/pool';
 
 // demo chart data
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  
-  const data = Array.from({ length: 20 }, (_, i) => {
-    const date = new Date();
-    date.setHours(date.getHours() - i);  
-    return {
-      name: date.toLocaleString(),
-      value: getRandomInt(1000, 5000),  
-    };
-  }).reverse(); // reverse the array so it's sorted in ascending order by time
+// function getRandomInt(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1)) + min;
+//   }
 
-  
+//   const data = Array.from({ length: 20 }, (_, i) => {
+//     const date = new Date();
+//     date.setHours(date.getHours() - i);  
+//     return {
+//       name: date.toLocaleString(),
+//       value: getRandomInt(1000, 5000),  
+//     };
+//   }).reverse(); // reverse the array so it's sorted in ascending order by time
+
+
 
 
 const CustomTooltip = (data: TooltipProps<any, any>) => {
@@ -37,32 +37,29 @@ const CustomTooltip = (data: TooltipProps<any, any>) => {
                     })}
             </div>
         );
-    };
-
-    return null
+    }
+    return null;
 };
 
 export default function Lines() {
     const { pool } = usePoolStore(); // Extract pool from the store
     console.log('bars pool storage data:', pool);
-    let dataApi = pool?.size_history;
+    const dataApi = pool?.size_history;
     console.log('Lines size_history:', dataApi);
 
     // remap data
-const feeSizeData = dataApi.map(size => {
-    let name = size.toString();
-    return {
-        name, // use the 'name' variable
-        value: size,
-    };
-});
+    let feeSizeData: { name: string; value: number; }[] = [];
+    if (dataApi && dataApi.length > 0) {
+        feeSizeData = dataApi.map(size => ({
+            name: size.toString(),
+            value: size,
+        }));
+    }
 
     return (
         <ResponsiveContainer width="100%" height={300}>
 
             <LineChart
-                //   width={500}
-                //   height={300}
                 data={feeSizeData}
                 margin={{
                     top: 5,
