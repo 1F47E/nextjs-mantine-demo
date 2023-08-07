@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { createStyles, Group, Paper, SimpleGrid, Text, rem } from '@mantine/core';
+import { createStyles, Group, Paper, SimpleGrid, Text, Title, rem } from '@mantine/core';
 import AnimatedNumber from "animated-number-react";
 
 import {
@@ -89,10 +89,12 @@ function StatsGrid() {
 
         <Group align="flex-end" spacing="xs" mt={25}>
           <Text className={classes.value}>
-          <AnimatedNumber
+            <Title>{stat.value}</Title>
+          </Text>
+          {/* <AnimatedNumber
             value={stat.value}
             formatValue={formatValue}
-          /></Text>
+          /></Text> */}
           {/* <AnimatedNumbers
             includeComma
             animateToNumber={stat.value}
