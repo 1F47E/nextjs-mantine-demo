@@ -16,14 +16,25 @@ interface Pool {
   weight: number,
   fee: number,
   avg_fee: number,
+  fee_buckets: Bucket[],
 }
 
-export interface PoolState {
+interface Bucket {
+  name: string,
+  value: number,
+}
+
+export interface FeeBucketState {
   pool: null | Pool,
   updatePool: (r: null | Pool) => void
 }
 
-export const usePoolStore = create<PoolState>()(
+export interface StorageState {
+  pool: null | Pool,
+  updatePool: (r: null | Pool) => void
+}
+
+export const usePoolStore = create<StorageState>()(
   devtools(
     persist(
       (set) => ({
@@ -34,7 +45,9 @@ export const usePoolStore = create<PoolState>()(
           weight: 0,
           fee: 0,
           avg_fee: 0,
+          fee_buckets: [],
         },
+        feeBuckets: [],
         updatePool: (p:null | Pool) => set(() => ({ pool: p })),
       }),
       {
