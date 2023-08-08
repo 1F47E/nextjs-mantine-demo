@@ -38,7 +38,8 @@ const CustomTooltip = (data: TooltipProps<any, any>) => {
                     data.payload.map((i: any) => {
                         return (
                             <Chip key={i.dataKey}>
-                                {i.payload.name}+ sat/byte - {i.value} txs
+                                {/* {i.payload.name}+ sat/byte - {i.value} txs */}
+                                {i.payload.name}
                             </Chip>
                         )
                     })}
@@ -56,9 +57,12 @@ export default function Bars() {
  
     // remap data
     if (data) {
-        if (feeData.length === data.length) {
-            for (let i = 0; i < data.length; i++) {
-                feeData[i].value = data[i];
+        const dataLog = data.map(value => Math.log(value + 1)); 
+
+        if (feeData.length === dataLog.length) {
+            for (let i = 0; i < dataLog.length; i++) {
+                feeData[i].value = dataLog[i];
+                feeData[i].name = data[i].toString();
                 // console.log("data", data[i]);
             }
         } else {
