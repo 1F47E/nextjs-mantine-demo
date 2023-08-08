@@ -22,8 +22,8 @@ const feeData = buckets.map(bucket => {
     }
     return {
         name, // use the 'name' variable
-        value: 0,
-        valueReal: 0,
+        value: 1,
+        valueReal: 1,
     };
 });
 // TODO: move to component
