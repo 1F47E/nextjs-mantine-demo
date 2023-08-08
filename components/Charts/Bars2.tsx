@@ -42,7 +42,7 @@ export default function Bars() {
     const [scale, setScale] = useState('log');
     const { pool } = usePoolStore();
     const data = pool?.fee_buckets;
-    const [chartData, setChartData] = useState([]);
+    const [chartData, setChartData] = useState<{ name: string, value: number, valueReal: number }[]>([]);
 
 
     useEffect(() => {
