@@ -67,8 +67,9 @@ function StatsGrid() {
   let feeTitle = 'Current fee';
   let feeValue = pool?.fee ?? 0;
   const btc = 100000000;
-  if (feeValue > btc) {
-    // convert satoshi to btc
+
+  // if fee is greater than 0.1 btc, convert to btc
+  if (feeValue > btc / 10) {
     feeValue = Math.round((feeValue / btc) * 100) / 100;
     feeTitle += ' (BTC)';
   } else {
