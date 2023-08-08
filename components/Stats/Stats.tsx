@@ -7,6 +7,7 @@ import {
   IconCoin,
   IconBox,
   IconRipple,
+  IconSalt,
 } from '@tabler/icons-react';
 import { usePoolStore } from '../../store/pool';
 
@@ -46,6 +47,7 @@ const icons = {
   pool: IconRipple,
   discount: IconDiscount2,
   coin: IconCoin,
+  size: IconSalt,
 };
 
 interface StatsGridProps {
@@ -60,22 +62,46 @@ function StatsGrid() {
 
   // Extract values from pool
   const blockValue = pool?.height ?? 0;
-  const feeValue = pool?.fee ?? 0;
+
+  // fee
+  let feeTitle = 'Current fee';
+  let feeValue = pool?.fee ?? 0;
+  const btc = 100000000;
+  if (feeValue > btc) {
+    // convert satoshi to btc
+    feeValue = Math.round((feeValue / btc) * 100) / 100;
+    feeTitle += ' (BTC)';
+  } else {
+    feeTitle += ' (sat)';
+  }
+
   const mempoolSizeValue = pool?.size ?? 0;
-  const mempoolWeightValue = pool?.weight ?? 0;
+
+  // weight
+  let weightTitle = 'Mempool weight';
+  let mempoolWeightValue = pool?.weight ?? 0;
+
+  if (mempoolWeightValue > 0) {
+    if (mempoolWeightValue > 1024) {
+      mempoolWeightValue = Math.round((mempoolWeightValue / 1024) * 100) / 100;
+      weightTitle += ' (MB)';
+    } else {
+      weightTitle += ' (KB)';
+    }
+  }
 
   const { classes } = useStyles();
   const stats: StatsGridProps[] = [
-    { title: 'Block', icon: 'block', value: blockValue },
-    { title: 'Current avg fee', icon: 'coin', value: feeValue },
+    { title: 'Block #', icon: 'block', value: blockValue },
+    { title: feeTitle, icon: 'discount', value: feeValue },
     { title: 'Mempool size', icon: 'pool', value: mempoolSizeValue },
-    { title: 'Mempool weight', icon: 'discount', value: mempoolWeightValue },
+    { title: weightTitle, icon: 'size', value: mempoolWeightValue },
   ];
 
   const statsItems = stats.map((stat) => {
     const iconName = stat.icon as keyof typeof icons;
     const Icon = icons[iconName];
-    const formatValue = (value:number) => value.toFixed(0);
+    // const formatValue = (value:number) => value.toFixed(0);
     return (
       <Paper withBorder p="md" radius="md" key={stat.title}>
 
