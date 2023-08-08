@@ -83,6 +83,9 @@ function StatsGrid() {
   let mempoolWeightValue = pool?.weight ?? 0;
 
   if (mempoolWeightValue > 0) {
+    if (mempoolWeightValue > 1024 * 1024) {
+      mempoolWeightValue = Math.round((mempoolWeightValue / 1024 / 1024) * 100) / 100;
+      weightTitle += ' (GB)';
     if (mempoolWeightValue > 1024) {
       mempoolWeightValue = Math.round((mempoolWeightValue / 1024) * 100) / 100;
       weightTitle += ' (MB)';
