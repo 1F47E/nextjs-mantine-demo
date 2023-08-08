@@ -59,14 +59,15 @@ interface StatsGridProps {
 function StatsGrid() {
   const { pool } = usePoolStore(); // Extract pool from the store
 
-
   // Extract values from pool
   const blockValue = pool?.height ?? 0;
 
   // fee
   let feeTitle = 'Current fee';
   let feeValue = pool?.fee ?? 0;
-  const btc = 100000000;
+  // due to uint64 overflow fee comes in 1000 sats
+  // btc is 100000000 sats
+  const btc = 100000; // 000 * multiplier from API
 
   // if fee is greater than 0.1 btc, convert to btc
   if (feeValue > btc / 10) {
@@ -86,7 +87,7 @@ function StatsGrid() {
     if (mempoolWeightValue > 1024 * 1024) {
       mempoolWeightValue = Math.round((mempoolWeightValue / 1024 / 1024) * 100) / 100;
       weightTitle += ' (GB)';
-    if (mempoolWeightValue > 1024) {
+    } else if (mempoolWeightValue > 1024) {
       mempoolWeightValue = Math.round((mempoolWeightValue / 1024) * 100) / 100;
       weightTitle += ' (MB)';
     } else {
