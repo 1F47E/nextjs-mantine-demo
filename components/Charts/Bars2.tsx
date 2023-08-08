@@ -10,7 +10,7 @@ import { IconInfoSquareRounded } from '@tabler/icons-react';
 import { usePoolStore } from '../../store/pool';
 
 // buckets := []uint{2, 3, 4, 5, 6, 8, 10, 15, 25, 35, 50, 70, 85, 100, 125, 150, 200, 250, 300, 350, 400, 450, 499}
-let buckets = [
+const buckets = [
     2, 3, 4, 5, 6, 8, 10, 15, 25, 35, 50, 70, 85, 100,
     125, 150, 200, 250, 300, 350, 400, 450, 499, 500,
 ];
@@ -23,6 +23,7 @@ const feeData = buckets.map(bucket => {
     return {
         name, // use the 'name' variable
         value: 0,
+        valueReal: 0,
     };
 });
 // TODO: move to component
@@ -30,39 +31,38 @@ const CustomTooltip = (data: TooltipProps<any, any>) => {
     const { active, payload } = data;
 
     if (active && payload) {
-        console.log('custom tooltip data:', data);
+        // console.log('custom tooltip data:', data);
         return (
-            <div className='recharts-custom-tooltip'>
+            <div className="recharts-custom-tooltip">
                 {data &&
                     data.payload &&
-                    data.payload.map((i: any) => {
-                        return (
-                            <Chip key={i.dataKey}>
-                                {/* {i.payload.name}+ sat/byte - {i.value} txs */}
-                                {i.payload.name}
-                            </Chip>
-                        )
-                    })}
+                    data.payload.map((i: any) => (
+                        <Chip key={i.dataKey}>
+                            {i.payload.name}+ sat/byte - {i.payload.valueReal} txs
+                            {/* {i.payload.name} */}
+                        </Chip>
+                    ))
+                }
             </div>
         );
-    };
-
+    }
     return null;
 };
 
 export default function Bars() {
     const { pool } = usePoolStore(); // Extract pool from the store
-    console.log('bars pool storage data:', pool);
-    let data = pool?.fee_buckets;
- 
+    // console.log('bars pool storage data:', pool);
+    const data = pool?.fee_buckets;
+
     // remap data
     if (data) {
-        const dataLog = data.map(value => Math.log(value + 1)); 
+        const dataLog = data.map(value => Math.log(value + 1));
 
         if (feeData.length === dataLog.length) {
             for (let i = 0; i < dataLog.length; i++) {
+                feeData[i].valueReal = data[i];
                 feeData[i].value = dataLog[i];
-                feeData[i].name = data[i].toString();
+                // feeData[i].name = data[i].toString();
                 // console.log("data", data[i]);
             }
         } else {
@@ -77,11 +77,11 @@ export default function Bars() {
     return (
         <ResponsiveContainer width="100%" height={300}>
             <BarChart
-                // width={420}
-                // height={250}
-                data={feeData}
-                barGap={0}
-                barSize={20}
+              // width={420}
+              // height={250}
+              data={feeData}
+              barGap={0}
+              barSize={20}
             //   layout="vertical"
             >
                 {/* <YAxis /> */}
